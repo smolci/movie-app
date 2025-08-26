@@ -3,7 +3,7 @@ import React from 'react'
 const MovieCard = ({movie}) => {
     return (
         <div className="movie-card">
-            <img src={movie["#IMG_POSTER"]} alt={movie["#TITLE"]} />
+            <img src={movie["#IMG_POSTER"] || "no-movie.png"} alt={movie["#TITLE"]} />
             <div className="mt-4">
                 <h3>{movie["#AKA"]}</h3>
                 <div className="content">
