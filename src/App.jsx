@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import Search from "./components/Search.jsx";
 import MovieCard from "./components/MovieCard.jsx";
+import {useDebounce} from "react-use";
 
 const API_BASE_URL = "https://imdb.iamidiotareyoutoo.com";
 
@@ -18,13 +19,16 @@ const App = () => {
     const [movieList, setMovieList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
 
-    const fetchMovies = async () => {
+    useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
+
+    const fetchMovies = async (query = '') => {
         setIsLoading(true);
         setErrorMessage("");
-
+        if (query === '') return;
         try {
-            const endpoint = `${API_BASE_URL}/search?q=spiderman`;
+            const endpoint = `${API_BASE_URL}/search?q=${query}`;
             const response = await fetch(endpoint, API_OPTIONS);
 
             if (!response.ok) throw Error("Failed to fetch movies.");
@@ -49,8 +53,8 @@ const App = () => {
     };
 
     useEffect(() => {
-        fetchMovies();
-    }, []);
+        fetchMovies(debouncedSearchTerm);
+    }, [debouncedSearchTerm]);
 
     return (
         <main>
